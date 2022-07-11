@@ -15,6 +15,7 @@ interface Cycle {
 }
 
 interface CyclesContextType {
+  cycles: Cycle[]
   activeCycle: Cycle | undefined
   amountSecondsPassed: number
   markCurrentCycleAsFinished: () => void
@@ -82,6 +83,7 @@ export function CyclesContextProvider({
   return (
     <CyclesContext.Provider
       value={{
+        cycles,
         activeCycle,
         amountSecondsPassed,
         markCurrentCycleAsFinished,
