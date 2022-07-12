@@ -45,6 +45,8 @@ export function CyclesContextProvider({
 
   function markCurrentCycleAsFinished() {
     dispatch({ type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED })
+    setAmountSecondsPassed(0)
+    document.title = 'Ignite Timer'
   }
 
   function setSecondsPassed(seconds: number) {
