@@ -1,6 +1,11 @@
+import { formatDistanceToNow } from 'date-fns/esm'
+import { ptBR } from 'date-fns/locale'
+import { useCycles } from '../../contexts/CyclesContext'
 import { HistoryContainer, HistoryList, StatusFlag } from './styles'
 
 export function History() {
+  const { cycles } = useCycles()
+
   return (
     <HistoryContainer>
       <h1>Meu histórico</h1>
@@ -16,46 +21,29 @@ export function History() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há cerca de 2 meses</td>
-              <td>
-                <StatusFlag status="finished">Concluído</StatusFlag>
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há cerca de 2 meses</td>
-              <td>
-                <StatusFlag status="finished">Concluído</StatusFlag>
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há cerca de 2 meses</td>
-              <td>
-                <StatusFlag status="interrupted">Concluído</StatusFlag>
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há cerca de 2 meses</td>
-              <td>
-                <StatusFlag status="ongoing">Concluído</StatusFlag>
-              </td>
-            </tr>
-            <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há cerca de 2 meses</td>
-              <td>
-                <StatusFlag status="finished">Concluído</StatusFlag>
-              </td>
-            </tr>
+            {cycles.map((cycle) => (
+              <tr key={cycle.id}>
+                <td>{cycle.task}</td>
+                <td>{cycle.minutesAmount} minutos</td>
+                <td>
+                  {formatDistanceToNow(cycle.startDate, {
+                    addSuffix: true,
+                    locale: ptBR,
+                  })}
+                </td>
+                <td>
+                  {cycle.finishedDate && (
+                    <StatusFlag status="finished">Concluído</StatusFlag>
+                  )}
+                  {cycle.interruptedDate && (
+                    <StatusFlag status="interrupted">Interrompido</StatusFlag>
+                  )}
+                  {!cycle.finishedDate && !cycle.interruptedDate && (
+                    <StatusFlag status="ongoing">Em andamento</StatusFlag>
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </HistoryList>
