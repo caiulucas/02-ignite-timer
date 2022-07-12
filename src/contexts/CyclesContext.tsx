@@ -5,7 +5,11 @@ import {
   useReducer,
   useState,
 } from 'react'
-import { ActionTypes, Cycle, cyclesReducer } from '../reducers/cycles'
+import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
+import {
+  addNewCycleAction,
+  interruptCurrentCycleAction,
+} from '../reducers/cycles/actions'
 
 interface CreateCycleData {
   task: string
@@ -43,12 +47,6 @@ export function CyclesContextProvider({
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
 
-  function markCurrentCycleAsFinished() {
-    dispatch({ type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED })
-    setAmountSecondsPassed(0)
-    document.title = 'Ignite Timer'
-  }
-
   function setSecondsPassed(seconds: number) {
     setAmountSecondsPassed(seconds)
   }
@@ -60,16 +58,17 @@ export function CyclesContextProvider({
       ...data,
     }
 
-    dispatch({
-      type: ActionTypes.ADD_NEW_CYCLE,
-      payload: {
-        newCycle,
-      },
-    })
+    dispatch(addNewCycleAction(newCycle))
   }
 
   function interruptCurrentCycle() {
-    dispatch({ type: ActionTypes.INTERRUPT_CURRENT_CYCLE, activeCycle })
+    dispatch(interruptCurrentCycleAction())
+    setAmountSecondsPassed(0)
+    document.title = 'Ignite Timer'
+  }
+
+  function markCurrentCycleAsFinished() {
+    dispatch(markCurrentCycleAsFinished())
     setAmountSecondsPassed(0)
     document.title = 'Ignite Timer'
   }
